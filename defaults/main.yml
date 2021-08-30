@@ -1,0 +1,3 @@
+# mountpoint for dataset, or 'inherited' to inherit mountpoint from parent dataset
+mount_point: 'inherited'
+

@@ -54,7 +54,7 @@ Create a zfs _filesystem-dataset_.
          vars:
            pool: "zroot"
            dataset_path: "home"
-           mountpoint: "/home"
+           mount_point: "/home"
    ```
 
 ## Role Options

@@ -1,0 +1,9 @@
+- name: "Create zfs filesystem-dataset '{{ dataset_name }}'"
+  community.general.zfs:
+    name: "{{ dataset_name }}"
+    state: present
+    extra_zfs_properties:
+      mountpoint: "{{ (mount_point == 'inherited') | ternary(omit, mount_point) }}"
+  vars:
+    dataset_name: "{{ pool }}/{{ dataset_path }}"
+
