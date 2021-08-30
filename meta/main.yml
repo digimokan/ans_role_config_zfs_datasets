@@ -1,0 +1,14 @@
+galaxy_info:
+  author: digimokan
+  description: "Create a zfs filesystem-dataset"
+  license: "MIT"
+  min_ansible_version: 2.3
+  platforms:
+    - name: FreeBSD
+      versions:
+        - all
+  galaxy_tags:
+    - freebsd
+    - zfs
+    - dataset
+
