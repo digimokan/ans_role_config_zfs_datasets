@@ -16,7 +16,7 @@ Create a zfs _filesystem-dataset_.
 
 ## Purpose
 
-* Create a zfs [_filesystem-dataset__](https://openzfs.github.io/openzfs-docs/man/8/zfs-create.8.html#DESCRIPTION).
+* Create a zfs [_filesystem-dataset_](https://openzfs.github.io/openzfs-docs/man/8/zfs-create.8.html#DESCRIPTION).
 
 ## Supported Operating Systems
 
