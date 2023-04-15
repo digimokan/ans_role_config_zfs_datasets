@@ -1,8 +1,8 @@
-# ans_role_create_filesystem_dataset
+# ans_role_create_filesystem_datasets
 
-Create a zfs _filesystem-dataset_.
+Create multiple zfs _filesystem-datasets_.
 
-[![Release](https://img.shields.io/github/release/digimokan/ans_role_create_filesystem_dataset.svg?label=release)](https://github.com/digimokan/ans_role_create_filesystem_dataset/releases/latest "Latest Release Notes")
+[![Release](https://img.shields.io/github/release/digimokan/ans_role_create_filesystem_datasets.svg?label=release)](https://github.com/digimokan/ans_role_create_filesystem_datasets/releases/latest "Latest Release Notes")
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=license)](LICENSE.md "Project License")
 
 ## Table Of Contents
@@ -16,7 +16,7 @@ Create a zfs _filesystem-dataset_.
 
 ## Purpose
 
-* Create a zfs [_filesystem-dataset_](https://openzfs.github.io/openzfs-docs/man/8/zfs-create.8.html#DESCRIPTION).
+* Create multiple zfs [_filesystem-datasets_](https://openzfs.github.io/openzfs-docs/man/8/zfs-create.8.html#DESCRIPTION).
 
 ## Supported Operating Systems
 
@@ -30,7 +30,7 @@ Create a zfs _filesystem-dataset_.
 
    ```yaml
    # requirements.yml
-   - src: https://github.com/digimokan/ans_role_create_filesystem_dataset
+   - src: https://github.com/digimokan/ans_role_create_filesystem_datasets
    ```
 
 2. From the project root directory, install/download the role:
@@ -48,13 +48,14 @@ Create a zfs _filesystem-dataset_.
    - hosts: localhost
      connection: local
      tasks:
-       - name: "Create independent zfs filesystem dataset for '/home'"
+       - name: "Create all zfs filesystem datasets for a system"
          ansible.builtin.include_role:
-           name: ans_role_create_filesystem_dataset
+           name: ans_role_create_filesystem_datasets
          vars:
-           pool: "zroot"
-           dataset_path: "home"
-           mount_point: "/home"
+           filesystem_datasets:
+             - { pool: 'zroot', path: 'home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
+             - { pool: 'zroot', path: 'home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710' }
+             - { pool: 'zroot', path: 'home/user2/Trash', mount: 'inherited', owner: 'user2', group: 'user2', mode: '755' }
    ```
 
 ## Role Options
@@ -66,7 +67,7 @@ See the role `defaults` file, for overridable vars:
 ## Contributing
 
 * Feel free to report a bug or propose a feature by opening a new
-  [Issue](https://github.com/digimokan/ans_role_create_filesystem_dataset/issues).
+  [Issue](https://github.com/digimokan/ans_role_create_filesystem_datasets/issues).
 * Follow the project's [Contributing](CONTRIBUTING.md) guidelines.
 * Respect the project's [Code Of Conduct](CODE_OF_CONDUCT.md).
 
