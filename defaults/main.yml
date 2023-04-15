@@ -1,4 +1,7 @@
 # the zfs filesystem datasets to create, along with the owner/group/permissions
+# --> pool: the zpool to create the dataset on
+# --> path: the path at which the dataset will be accessed as a filesystem dir
+# --> mount: where to mount the dataset (if inherited, mount on parent dir in path)
 filesystem_datasets: []
   # - { pool: 'zroot', path: 'home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
   # - { pool: 'zroot', path: 'home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710' }
