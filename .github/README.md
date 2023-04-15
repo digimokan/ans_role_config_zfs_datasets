@@ -53,9 +53,9 @@ Create multiple zfs _filesystem-datasets_.
            name: ans_role_create_filesystem_datasets
          vars:
            filesystem_datasets:
-             - { pool: 'zroot', path: 'home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
-             - { pool: 'zroot', path: 'home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710' }
-             - { pool: 'zroot', path: 'home/user2/Trash', mount: 'inherited', owner: 'user2', group: 'user2', mode: '755' }
+             - { pool: 'zroot', path: '/home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
+             - { pool: 'zroot', path: '/home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710' }
+             - { pool: 'zroot', path: '/home/user2/Trash', mount: 'inherited', owner: 'user2', group: 'user2', mode: '755' }
    ```
 
 ## Role Options
