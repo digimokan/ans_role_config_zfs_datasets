@@ -1,3 +1,6 @@
-# mountpoint for dataset, or 'inherited' to inherit mountpoint from parent dataset
-mount_point: 'inherited'
+# the zfs filesystem datasets to create, along with the owner/group/permissions
+filesystem_datasets: []
+  # - { pool: 'zroot', path: 'home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
+  # - { pool: 'zroot', path: 'home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710' }
+  # - { pool: 'zroot', path: 'home/user2/Trash', mount: 'inherited', owner: 'user2', group: 'user2', mode: '755' }
 

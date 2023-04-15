@@ -1,0 +1,17 @@
+- name: "Create zfs filesystem-dataset '{{ dataset_name }}'{{ mountpoint_name }}"
+  community.general.zfs:
+    name: "{{ dataset_name }}"
+    state: present
+    extra_zfs_properties:
+      mountpoint: "{{ (dataset.mount == 'inherited') | ternary(omit, dataset.mount) }}"
+
+- name: "Set owner and permissions on '{{ dataset_name }}'{{ mountpoint_name }}"
+  ansible.builtin.file:
+    path: "{{ dataset.path }}"
+    owner: "{{ dataset.owner }}"
+    group: "{{ dataset.group }}"
+    mode: "{{ dataset.mode }}"
+    state: directory
+  become: true
+  become_user: root
+

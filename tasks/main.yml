@@ -1,11 +1,10 @@
-- name: "Create zfs filesystem-dataset '{{ dataset_name }}'{{ mountpoint_name }}"
-  community.general.zfs:
-    name: "{{ dataset_name }}"
-    state: present
-    extra_zfs_properties:
-      mountpoint: "{{ (mount_point == 'inherited') | ternary(omit, mount_point) }}"
+- name: "Create a zfs filesystem dataset, and set filesystem attributes on it"
+  ansible.builtin.include_tasks: create_dataset.yml
   vars:
-    dataset_name: "{{ pool }}/{{ dataset_path }}"
-    mountpoint_descrip: " on mountpoint '{{ mount_point }}'"
-    mountpoint_name: "{{ '' if (mount_point == 'inherited') else mountpoint_descrip }}"
+    dataset_name: "{{ dataset.pool }}/{{ dataset.path }}"
+    mountpoint_descrip: " on mountpoint '{{ dataset.mount }}'"
+    mountpoint_name: "{{ '' if (dataset.mount == 'inherited') else mountpoint_descrip }}"
+  loop: "{{ filesystem_datasets }}"
+  loop_control:
+    loop_var: dataset
 
