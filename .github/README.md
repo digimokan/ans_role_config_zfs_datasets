@@ -48,7 +48,7 @@ Create multiple zfs _filesystem-datasets_.
    - hosts: localhost
      connection: local
      tasks:
-       - name: "Create all zfs filesystem datasets for a system"
+       - name: "Create all zfs filesystem datasets for the system"
          ansible.builtin.include_role:
            name: ans_role_create_filesystem_datasets
          vars:
