@@ -1,6 +1,6 @@
 galaxy_info:
   author: digimokan
-  description: "Create multiple zfs filesystem-datasets"
+  description: "Create and configure zfs filesystem datasets"
   license: "MIT"
   min_ansible_version: 2.3
   platforms:

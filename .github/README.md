@@ -1,8 +1,8 @@
-# ans_role_create_filesystem_datasets
+# ans_role_config_zfs_datasets
 
-Create multiple zfs _filesystem-datasets_.
+Create and configure zfs _filesystem-datasets_.
 
-[![Release](https://img.shields.io/github/release/digimokan/ans_role_create_filesystem_datasets.svg?label=release)](https://github.com/digimokan/ans_role_create_filesystem_datasets/releases/latest "Latest Release Notes")
+[![Release](https://img.shields.io/github/release/digimokan/ans_role_config_zfs_datasets.svg?label=release)](https://github.com/digimokan/ans_role_config_zfs_datasets/releases/latest "Latest Release Notes")
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=license)](LICENSE.md "Project License")
 
 ## Table Of Contents
@@ -16,7 +16,8 @@ Create multiple zfs _filesystem-datasets_.
 
 ## Purpose
 
-* Create multiple zfs [_filesystem-datasets_](https://openzfs.github.io/openzfs-docs/man/8/zfs-create.8.html#DESCRIPTION).
+* Create zfs [_filesystem-datasets_](https://openzfs.github.io/openzfs-docs/man/8/zfs-create.8.html#DESCRIPTION).
+* Configure loading of datasets at boot.
 
 ## Supported Operating Systems
 
@@ -30,7 +31,7 @@ Create multiple zfs _filesystem-datasets_.
 
    ```yaml
    # requirements.yml
-   - src: https://github.com/digimokan/ans_role_create_filesystem_datasets
+   - src: https://github.com/digimokan/ans_role_config_zfs_datasets
    ```
 
 2. From the project root directory, install/download the role:
@@ -48,9 +49,9 @@ Create multiple zfs _filesystem-datasets_.
    - hosts: localhost
      connection: local
      tasks:
-       - name: "Create all zfs filesystem datasets for the system"
+       - name: "Create and configure zfs filesystem datasets"
          ansible.builtin.include_role:
-           name: ans_role_create_filesystem_datasets
+           name: ans_role_config_zfs_datasets
          vars:
            filesystem_datasets:
              - { pool: 'zroot', path: '/home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
@@ -67,7 +68,7 @@ See the role `defaults` file, for overridable vars:
 ## Contributing
 
 * Feel free to report a bug or propose a feature by opening a new
-  [Issue](https://github.com/digimokan/ans_role_create_filesystem_datasets/issues).
+  [Issue](https://github.com/digimokan/ans_role_config_zfs_datasets/issues).
 * Follow the project's [Contributing](CONTRIBUTING.md) guidelines.
 * Respect the project's [Code Of Conduct](CODE_OF_CONDUCT.md).
 
