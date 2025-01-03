@@ -1,0 +1,3 @@
+# on boot, query user for any passphrases required to mount zfs datasets
+zfs_datasets_decrypt_at_boot: true
+

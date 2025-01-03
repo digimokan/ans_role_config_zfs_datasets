@@ -1,0 +1,38 @@
+#!/bin/sh
+# vim: set filetype=sh:
+# shellcheck disable=SC2034
+
+# ANSIBLE-MANAGED CONFIGURATION FILE
+# Refs:
+# --> https://forums.freebsd.org/threads/specify-keyfile-for-zfs-dataset-with-encryption-via-rc-conf.80443/#post-512278
+# Purpose: query user for any passphrases required to decrypt ZFS datasets at boot
+# Details:
+#   - /etc/rc.d/zfs already calls zfs mount.
+#   - This service, when enabled, calls zfs mount again, with the '-l' flag
+#
+# PROVIDE: zfs_datasets_decrypt_at_boot
+# REQUIRE: zfs
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# zfs_datasets_decrypt_at_boot_enable (bool): Set to NO by default.
+
+# shellcheck source=/dev/null
+. /etc/rc.subr
+
+name="zfs_datasets_decrypt_at_boot"
+desc="Auto-mount encrypted zfs datasets by querying user for passphrase"
+rcvar="zfs_datasets_decrypt_at_boot_enable"
+start_cmd="zfs_datasets_decrypt_at_boot_start"
+
+: "${zfs_datasets_decrypt_at_boot_enable:="NO"}"
+
+zfs_datasets_decrypt_at_boot_start()
+{
+  zfs mount -val
+}
+
+load_rc_config "${name}"
+run_rc_command "${1}"
+

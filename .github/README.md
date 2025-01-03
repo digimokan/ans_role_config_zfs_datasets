@@ -61,9 +61,9 @@ Create and configure zfs _filesystem-datasets_.
 
 ## Role Options
 
-See the role `defaults` file, for overridable vars:
+See the role `defaults`, for overridable vars:
 
-  * [defaults/main.yml](../defaults/main.yml)
+  * [defaults/](../defaults/)
 
 ## Contributing
 

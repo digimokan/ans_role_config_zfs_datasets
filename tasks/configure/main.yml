@@ -1,0 +1,4 @@
+- name: "Configure querying user for encrypted-dataset passphrases at boot"
+  ansible.builtin.include_tasks: datasets_decrypt/main.yml
+  when: zfs_datasets_decrypt_at_boot
+

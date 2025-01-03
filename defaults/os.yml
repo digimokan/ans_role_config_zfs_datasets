@@ -1,0 +1,6 @@
+# custom RC service file created for decrypting zfs datasets at boot
+zfs_datasets_freebsd_rc_d_script_filepath: "/usr/local/etc/rc.d/zfs_datasets_decrypt_at_boot"
+
+# config file for host info, network info, and services to start at boot
+zfs_datasets_freebsd_rc_conf_filepath: "/etc/rc.conf"
+
