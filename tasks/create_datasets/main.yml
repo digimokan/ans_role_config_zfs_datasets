@@ -2,10 +2,8 @@
   ansible.builtin.include_tasks: create_dataset.yml
   vars:
     dataset_name: "{{ dataset.pool }}{{ dataset.path }}"
-    mountpoint_descrip: " on mountpoint '{{ dataset.mount }}'"
-    mountpoint_name: "{{ '' if (dataset.mount == 'inherited') else mountpoint_descrip }}"
-    encrypt_dataset: "{{ true if (dataset.enc | length > 0) else false }}"
-    encryption_password: "{{ dataset.enc }}"
+    dataset_encrypt_enable: "{{ true if (dataset.enc | length > 0) else false }}"
+    dataset_encrypt_passwd: "{{ dataset.enc }}"
   loop: "{{ zfs_datasets_to_create }}"
   loop_control:
     loop_var: dataset

@@ -8,21 +8,17 @@
 - name: "Set zfs dataset properties to enable encryption"
   ansible.builtin.set_fact:
     encrypt_opt: '-o encryption=on -o keyformat=passphrase -o keylocation=prompt'
-  when: (dataset_exists_result is changed) and encrypt_dataset
-  # when: encrypt_dataset
+  when: (dataset_exists_result is changed) and dataset_encrypt_enable
 
 - name: "Set zfs dataset properties to disable encryption"
   ansible.builtin.set_fact:
     encrypt_opt: ''
-  when: (dataset_exists_result is changed) and not encrypt_dataset
+  when: (dataset_exists_result is changed) and not dataset_encrypt_enable
 
 - name: "Create filesystem-dataset '{{ dataset_name }}'"
   ansible.builtin.command:
     cmd: zfs create {{ encrypt_opt }} {{ dataset_name }}
-    stdin: "{{ encryption_password }}"
-    # stdin: |
-    #   "{{ encryption_password }}"
-    #   "{{ encryption_password }}"
+    stdin: "{{ dataset_encrypt_passwd }}"
   become: true
   become_user: root
   when: dataset_exists_result is changed
@@ -36,37 +32,4 @@
     state: directory
   become: true
   become_user: root
-
-# - name: "Create zfs filesystem-dataset '{{ dataset_name }}'{{ mountpoint_name }}"
-#   community.general.zfs:
-#     name: "{{ dataset_name }}"
-#     state: present
-#     extra_zfs_properties:
-#       mountpoint: "{{ (dataset.mount == 'inherited') | ternary(omit, dataset.mount) }}"
-#   become: true
-#   become_user: root
-#   when: not encrypt_dataset
-
-# - name: "Create zfs filesystem-dataset '{{ dataset_name }}'{{ mountpoint_name }}"
-#   community.general.zfs:
-#     name: "{{ dataset_name }}"
-#     state: present
-#     extra_zfs_properties:
-#       mountpoint: "{{ (dataset.mount == 'inherited') | ternary(omit, dataset.mount) }}"
-#       encryption: "on"
-#       keyformat: "passphrase"
-#       keylocation: "prompt"
-#   become: true
-#   become_user: root
-#   when: encrypt_dataset
-
-# - name: "Set owner and permissions on '{{ dataset_name }}'{{ mountpoint_name }}"
-#   ansible.builtin.file:
-#     path: "{{ dataset.path }}"
-#     owner: "{{ dataset.owner }}"
-#     group: "{{ dataset.group }}"
-#     mode: "{{ dataset.mode }}"
-#     state: directory
-#   become: true
-#   become_user: root
 

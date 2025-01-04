@@ -1,15 +1,14 @@
 # the zfs filesystem datasets to create, along with the owner/group/permissions
 # --> pool: the zpool to create the dataset on
 # --> path: the path at which the dataset will be accessed as a filesystem dir
-# --> mount: where to mount the dataset (if inherited, mount on parent dir in path)
 # --> owner: user that owns the dataset
 # --> group: group that owns the dataset
 # --> mode: file mode of the dataset
 # --> enc: encryption passphrase for dataset (empty str for no encryption)
 zfs_datasets_to_create: []
-# - { pool: 'zroot', path: '/home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755', enc: '' }
-# - { pool: 'zroot', path: '/home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710', enc: '' }
-# - { pool: 'zroot', path: '/home/user2/Trash', mount: 'inherited', owner: 'user2', group: 'user2', mode: '755', enc: '' }
+# - { pool: 'zroot', path: '/home',             owner: 'root',  group: 'wheel', mode: '755', enc: '' }
+# - { pool: 'zroot', path: '/home/user2',       owner: 'user2', group: 'user2', mode: '710', enc: '' }
+# - { pool: 'zroot', path: '/home/user2/Trash', owner: 'user2', group: 'user2', mode: '755', enc: '' }
 
 # on boot, query user for any passphrases required to mount zfs datasets
 zfs_datasets_decrypt_at_boot: true
