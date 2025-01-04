@@ -8,7 +8,8 @@
 - name: "Set zfs dataset properties to enable encryption"
   ansible.builtin.set_fact:
     encrypt_opt: '-o encryption=on -o keyformat=passphrase -o keylocation=prompt'
-    when: (dataset_exists_result is changed) and encrypt_dataset
+    # when: (dataset_exists_result is changed) and encrypt_dataset
+    when: encrypt_dataset
 
 - name: "Set zfs dataset properties to disable encryption"
   ansible.builtin.set_fact:
