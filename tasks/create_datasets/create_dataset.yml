@@ -19,9 +19,10 @@
 - name: "Create filesystem-dataset '{{ dataset_name }}'"
   ansible.builtin.command:
     cmd: zfs create {{ encrypt_opt }} {{ dataset_name }}
-    stdin: |
-      "{{ encryption_password }}"
-      "{{ encryption_password }}"
+    stdin: "{{ encryption_password }}"
+    # stdin: |
+    #   "{{ encryption_password }}"
+    #   "{{ encryption_password }}"
   become: true
   become_user: root
   when: dataset_exists_result is changed
