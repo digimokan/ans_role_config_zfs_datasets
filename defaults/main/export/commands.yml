@@ -1,3 +1,3 @@
 # command to execute to run the ZFS datasets utility script (provided by this role)
-zfs_datasets_utility_script_cmd: 'do_zfs_hw.sh'
+zfs_datasets_utility_script_cmd: 'do_zfs_datasets.sh'
 
