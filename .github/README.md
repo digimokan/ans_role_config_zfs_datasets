@@ -65,6 +65,10 @@ Vars with default values, which can be overridden in the playbook:
 
   * [overridable](../defaults/main/overridable)
 
+Vars defined by this role, exported with `public: true`, for use in other roles:
+
+  * [export](../defaults/main/export/commands.yml)
+
 ## Contributing
 
 * Feel free to report a bug or propose a feature by opening a new

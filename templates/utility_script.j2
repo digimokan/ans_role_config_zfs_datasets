@@ -1,0 +1,211 @@
+#!/bin/sh
+# vim: set filetype=sh:
+
+################################################################################
+# Purpose:   Provide helper script for working with ZFS datasets
+# Args/Opts: See usage (run with -h option).
+# Meta:      Script installed by ansible {{ role_name | basename }}.
+# Style:     ENV_VAR, GLOBAL_VAR, GLOBAL_READONLY_VAR, func_local_var, my_func
+################################################################################
+
+# GLOBAL VARS:
+
+# Constants
+PROG_NAME="$(basename "${0}")"
+readonly PROG_NAME
+
+# Mutable User Normal Cmd Option Selections
+PRINT_HELP_MENU='false'
+LIST_DATASETS='false'
+LIST_SNAPSHOTS='false'
+
+# LOCAL FUNCTIONS:
+
+print_usage() {
+  prog_name_num_chars="$(printf "%s" "${PROG_NAME}" | wc -m)"
+  leading_indent=''
+  i=0
+  while [ "${i}" -lt "${prog_name_num_chars}" ]; do
+    leading_indent="${leading_indent} "
+    i=$((i + 1))
+  done
+
+  mountpt="${DEFAULT_MOUNT_POINT_BASE}/[pool-name]"
+
+  printf "NORMAL OPERATIONS:\n"
+  printf "  %s  -h|--help\n" "${PROG_NAME}"
+  printf "  %s  -l|--list-datasets\n" "${PROG_NAME}"
+  printf "  %s  -g|--list-snapshots\n" "${PROG_NAME}"
+  printf "DETAILS:\n"
+  printf "  -h, --help\n"
+  printf "      print this help message\n"
+  printf "  -l, --list-datasets\n"
+  printf "      list all datasets\n"
+  printf "  -g, --list-snapshots\n"
+  printf "      list all snapshots\n"
+  printf "EXIT CODES:\n"
+  printf "    0  ok\n"
+  printf "    5  zfs status/list error\n"
+  printf "  255  usage or options error\n"
+}
+
+get_cmd_opts() {
+  while getopts ':hlg-:' option; do
+    short_opt_arg="${OPTARG}"
+    case "${option}" in
+      h)  handle_print_help_menu ;;
+      l)  handle_list_datasets ;;
+      g)  handle_list_snapshots ;;
+      -)  long_opt_name="${OPTARG}"
+          long_opt_arg="${OPTARG#*=}"
+          case ${long_opt_name} in
+            help)                            handle_print_help_menu ;;
+            help=*)                          handle_illegal_long_option_arg "${long_opt_name}" ;;
+            list-datasets)                   handle_list_datasets ;;
+            list-datasets=*)                 handle_illegal_long_option_arg "${long_opt_name}" ;;
+            list-snapshots)                  handle_list_snapshots ;;
+            list-snapshots=*)                handle_illegal_long_option_arg "${long_opt_name}" ;;
+            '')                              break ;; # non-option arg starting with '-'
+            *)                               handle_unknown_option "${long_opt_name}" ;;
+          esac ;;
+      \?) handle_unknown_option "${short_opt_arg}" ;;
+    esac
+  done
+}
+
+exit_with_cleanup() {
+  err_code="${1}"
+  exit "${err_code}"
+}
+
+print_err_msg() {
+  err_msg="${1}"
+  printf "ERROR:\n%s: %s\n" "${PROG_NAME}" "${err_msg}"
+}
+
+quit_with_err_msg() {
+  err_msg="${1}"
+  err_code="${2}"
+  print_err_msg "${err_msg}"
+  exit_with_cleanup "${err_code}"
+}
+
+quit_if_rc_not_zero() {
+  cmd_exit_code="${1}"
+  err_msg="${2}"
+  script_exit_code="${3}"
+  if [ "${cmd_exit_code}" != 0  ]; then
+    quit_with_err_msg "${err_msg}" "${script_exit_code}"
+  fi
+}
+
+try_silent_with_exit() {
+  cmd="${1}"
+  err_msg="${2}"
+  err_code="${3}"
+
+  eval "${cmd}"
+  exit_code="${?}"
+  if [ "${exit_code}" != 0 ]; then
+    quit_with_err_msg "${err_msg}" "${err_code}"
+  fi
+}
+
+try_silent_print_with_exit() {
+  cmd="${1}"
+  op_descrip="${2}"
+  err_code="${3}"
+
+  printf "Now %s with \"%s\"...\n" "${op_descrip}" "${cmd}"
+  err_msg="error ${op_descrip}"
+  try_silent_with_exit \
+    "${cmd}" \
+    "${err_msg}" "${err_code}"
+}
+
+try_total_silent_with_exit() {
+  cmd="${1}"
+  op_descrip="${2}"
+
+  printf "Now %s with \"%s\"...\n" "${op_descrip}" "${cmd}"
+  eval "${cmd}" 1> /dev/null 2>&1
+}
+
+handle_unknown_option() {
+  short_opt_letter_or_long_opt_name="${1}"
+  err_msg="unknown option \"${short_opt_letter_or_long_opt_name}\""
+  quit_with_err_msg "${err_msg}" 255
+}
+
+handle_illegal_long_option_arg() {
+  long_opt_name="${1}"
+  err_msg="illegal argument in \"${long_opt_name}\""
+  quit_with_err_msg "${err_msg}" 255
+}
+
+handle_missing_long_option_arg() {
+  long_opt_name="${1}"
+  err_msg="missing argument for option \"${long_opt_name}\""
+  quit_with_err_msg "${err_msg}" 255
+}
+
+handle_print_help_menu() {
+  if [ "${LIST_DATASETS}" = 'true' ] || \
+     [ "${LIST_SNAPSHOTS}" = 'true' ]; then
+    quit_with_err_msg "mutually exclusive options selected" 255
+  fi
+  PRINT_HELP_MENU='true'
+}
+
+handle_list_datasets() {
+  if [ "${PRINT_HELP_MENU}" = 'true' ] || \
+     [ "${LIST_SNAPSHOTS}" = 'true' ]; then
+    quit_with_err_msg "mutually exclusive options selected" 255
+  fi
+  LIST_DATASETS='true'
+}
+
+handle_list_snapshots() {
+  if [ "${PRINT_HELP_MENU}" = 'true' ] || \
+     [ "${LIST_DATASETS}" = 'true' ]; then
+    quit_with_err_msg "mutually exclusive options selected" 255
+  fi
+  LIST_SNAPSHOTS='true'
+}
+
+do_print_help_menu() {
+  print_usage
+}
+
+do_list_datasets() {
+  datasets_status="$(zfs list -ro name,mountpoint,mounted,canmount)"
+  quit_if_rc_not_zero "${?}" "error getting zfs datasets list" 5
+  printf "%s\n" "${datasets_status}"
+}
+
+do_list_snapshots() {
+  snapshots_status="$(zfs list -t snapshot)"
+  quit_if_rc_not_zero "${?}" "error getting zfs snapshots" 5
+  printf "%s\n" "${snapshots_status}"
+}
+
+# MAIN SCRIPT:
+
+main() {
+  get_cmd_opts "$@"
+
+  if [ "${PRINT_HELP_MENU}" = 'true' ]; then
+    do_print_help_menu
+  elif [ "${LIST_DATASETS}" = 'true' ]; then
+    do_list_datasets
+  elif [ "${LIST_SNAPSHOTS}" = 'true' ]; then
+    do_list_snapshots
+  else
+    quit_with_err_msg "no valid option selected" 255
+  fi
+
+  exit_with_cleanup 0
+}
+
+main "$@"
+

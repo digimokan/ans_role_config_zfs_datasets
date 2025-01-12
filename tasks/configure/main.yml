@@ -2,3 +2,6 @@
   ansible.builtin.include_tasks: datasets_decrypt/main.yml
   when: zfs_datasets_decrypt_at_boot
 
+- name: "Create ZFS Datasets utility script"
+  ansible.builtin.include_tasks: create_util_script/main.yml
+
