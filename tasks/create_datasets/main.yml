@@ -1,6 +1,7 @@
 - name: "Create a zfs filesystem dataset, and set filesystem attributes on it"
   ansible.builtin.include_tasks: create_dataset.yml
   vars:
+    dataset_pool: "{{ dataset.pool }}"
     dataset_name: "{{ dataset.pool }}{{ dataset.path }}"
     dataset_encrypt_enable: "{{ true if (dataset.enc | length > 0) else false }}"
     dataset_encrypt_passwd: "{{ dataset.enc }}"

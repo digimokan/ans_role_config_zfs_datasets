@@ -1,3 +1,16 @@
+- name: "Check status of pool '{{ dataset_pool }}'"
+  ansible.builtin.command:
+    cmd: "zpool list {{ dataset_pool }}"
+  register: pool_exists_result
+  changed_when: false
+  failed_when: false
+
+- name: "Assert that pool '{{ dataset_pool }}' exists on the system"
+  ansible.builtin.assert:
+    that: "pool_exists_result.rc == 0"
+    fail_msg: "You must create or import pool '{{ dataset_pool }}' prior to creating datasets"
+    quiet: true
+
 - name: "Check if filesystem-dataset '{{ dataset_name }}' exists"
   ansible.builtin.command:
     cmd: "zfs list {{ dataset_name }}"
