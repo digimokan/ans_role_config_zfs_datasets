@@ -20,7 +20,7 @@
 - name: "Assert that pool mountpoint '{{ mountpoint }}' is in base path of dataset path '{{ dataset.path }}'"
   ansible.builtin.assert:
     that: "dataset.path.startswith(mountpoint)"
-    fail_msg: "'{{ dataset_name }}' should be mounted on '{{ mountpoint }}' of pool '{{ dataset_pool }}'"
+    fail_msg: "dataset should be on pool '{{ dataset_pool }}', which has mountpoint '{{ mountpoint }}"
     quiet: true
   vars:
     mountpoint: "{{ pool_mountpoint_result.stdout }}"
