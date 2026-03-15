@@ -14,6 +14,7 @@
     - { prop_nm: "encryption", prop_val: "on", add: "{{ zfs_dataset_enc_enable }}" }
     - { prop_nm: "keyformat", prop_val: "passphrase", add: "{{ zfs_dataset_enc_enable }}" }
     - { prop_nm: "keylocation", prop_val: "file://{{ zfs_datasets_temp_enc_pswd_path }}", add: "{{ zfs_dataset_enc_enable }}" }
+    - { prop_nm: "sharenfs", prop_val: "on", add: "{{ zfs_dataset_nfs_enable }}" }
   loop_control:
     loop_var: prop
   when: prop.add

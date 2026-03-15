@@ -9,6 +9,7 @@
     zfs_dataset_mode: "{{ dataset.mode }}"
     zfs_dataset_enc_enable: "{{ dataset.enc | length > 0 }}"
     zfs_dataset_enc_passwd: "{{ dataset.enc }}"
+    zfs_dataset_nfs_enable: "{{ dataset.nfs }}"
 
 - name: "Check filesystem-dataset prerequisites"
   ansible.builtin.include_tasks: check.yml
