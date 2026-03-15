@@ -17,9 +17,9 @@
   register: pool_mountpoint_result
   changed_when: false
 
-- name: "Assert that pool mountpoint '{{ mountpoint }}' is in base path of dataset path '{{ dataset_path }}'"
+- name: "Assert that pool mountpoint '{{ mountpoint }}' is in base path of dataset path '{{ zfs_dataset_path }}'"
   ansible.builtin.assert:
-    that: "dataset_path.startswith(mountpoint)"
+    that: "zfs_dataset_path.startswith(mountpoint)"
     fail_msg: "dataset should be on pool '{{ zfs_dataset_pool }}', which has mountpoint '{{ mountpoint }}"
     quiet: true
   vars:
