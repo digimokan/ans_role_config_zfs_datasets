@@ -29,6 +29,7 @@
   ansible.builtin.command:
     cmd: "zfs list {{ zfs_dataset_name }}"
   register: zfs_dataset_exists_result
+  changed_when: false
   failed_when: zfs_dataset_exists_result.rc > 1
 
 - name: "Set zfs_dataset_exists fact to '{{ dataset_exists }}'"
