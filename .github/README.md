@@ -55,9 +55,9 @@ Create and configure zfs _filesystem-datasets_.
            public: true
          vars:
            filesystem_datasets:
-             - { pool: 'zroot', path: '/home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }
-             - { pool: 'zroot', path: '/home/user2',       mount: 'inherited', owner: 'user2', group: 'user2', mode: '710' }
-             - { pool: 'zroot', path: '/home/user2/Trash', mount: 'inherited', owner: 'user2', group: 'user2', mode: '755' }
+             - { pool: 'zroot', stem: '/home',             owner: 'root',  group: 'wheel', mode: '755', enc: '' }
+             - { pool: 'zroot', stem: '/home/user2',       owner: 'user2', group: 'user2', mode: '710', enc: '' }
+             - { pool: 'zroot', stem: '/home/user2/Trash', owner: 'user2', group: 'user2', mode: '755', enc: '' }
    ```
 
 ## Role Options

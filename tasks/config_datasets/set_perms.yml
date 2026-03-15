@@ -1,10 +1,18 @@
-- name: "Set owner and permissions on filesystem-dataset '{{ zfs_dataset_name }}'"
+- name: "Obtain mountpoint of filesystem-dataset '{{ zfs_dataset_name }}'"
+  ansible.builtin.command:
+    cmd: "zfs get -H -o value mountpoint {{ zfs_dataset_name }}"
+  register: zfs_dataset_mountpoint_result
+  changed_when: false
+
+- name: "Set owner and permissions on filesystem-dataset mountpoint '{{ mountpoint }}'"
   ansible.builtin.file:
-    path: "{{ zfs_dataset_path }}"
+    path: "{{ mountpoint }}"
     owner: "{{ zfs_dataset_owner }}"
     group: "{{ zfs_dataset_group }}"
     mode: "{{ zfs_dataset_mode }}"
     state: directory
+  vars:
+    mountpoint: "{{ zfs_dataset_mountpoint_result.stdout }}"
   become: true
   become_user: root
 

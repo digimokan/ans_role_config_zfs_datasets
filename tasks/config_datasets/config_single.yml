@@ -3,8 +3,7 @@
     zfs_dataset_initial_props: {}
     zfs_dataset_persist_props: {}
     zfs_dataset_pool: "{{ dataset.pool }}"
-    zfs_dataset_name: "{{ dataset.pool }}{{ dataset.path }}"
-    zfs_dataset_path: "{{ dataset.path }}"
+    zfs_dataset_name: "{{ dataset.pool }}{{ dataset.stem }}"
     zfs_dataset_owner: "{{ dataset.owner }}"
     zfs_dataset_group: "{{ dataset.group }}"
     zfs_dataset_mode: "{{ dataset.mode }}"
