@@ -1,4 +1,4 @@
-- name: "{{ dataset_action }} filesystem-dataset '{{ zfs_dataset_name }}'"
+- name: "{{ dataset_action }} filesystem-dataset '{{ zfs_dataset_name }}' with zfs commands"
   community.general.zfs:
     name: "{{ zfs_dataset_name }}"
     state: present
