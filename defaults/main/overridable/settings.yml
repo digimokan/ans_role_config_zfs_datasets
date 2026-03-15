@@ -1,4 +1,4 @@
-# the zfs filesystem datasets to create, along with the owner/group/permissions
+# the zfs filesystem-datasets to create, along with the owner/group/permissions
 # --> pool: the zpool to create the dataset on
 # --> path: the path at which the dataset will be accessed as a filesystem dir
 # --> owner: user that owns the dataset
@@ -12,4 +12,7 @@ zfs_datasets_to_create: []
 
 # on boot, query user for any passphrases required to mount zfs datasets
 zfs_datasets_decrypt_at_boot: true
+
+# on creation of an encrypted dataset, temporarily store the password in a file
+zfs_datasets_temp_enc_pswd_path: "/tmp/ans_role_config_zfs_datasets_enc_pswd.txt"
 

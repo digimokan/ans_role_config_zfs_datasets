@@ -1,0 +1,29 @@
+- name: "Create custom decrypt-zfs-datasets-at-boot RC service at '{{ zfs_datasets_freebsd_rc_d_script_filepath }}'"
+  ansible.builtin.template:
+    dest: "{{ zfs_datasets_freebsd_rc_d_script_filepath }}"
+    src: "zfs_datasets_decrypt_at_boot_sh.j2"
+    force: true
+    mode: '0755'
+  become: true
+  become_user: root
+  when: zfs_datasets_decrypt_at_boot
+
+- name: "Remove custom decrypt-zfs-datasets-at-boot RC service at '{{ zfs_datasets_freebsd_rc_d_script_filepath }}'"
+  ansible.builtin.file:
+    path: "{{ zfs_datasets_freebsd_rc_d_script_filepath }}"
+    state: absent
+  become: true
+  become_user: root
+  when: not zfs_datasets_decrypt_at_boot
+
+- name: "{{ task_action }} custom decrypt-zfs-datasets-at-boot RC service in '{{ zfs_datasets_freebsd_rc_conf_filepath }}'"
+  community.general.sysrc:
+    path: "{{ zfs_datasets_freebsd_rc_conf_filepath }}"
+    name: "zfs_datasets_decrypt_at_boot_enable"
+    value: "{{ 'YES' if zfs_datasets_decrypt_at_boot_enable else 'NO' }}"
+    state: "{{ 'present' if zfs_datasets_decrypt_at_boot_enable else 'absent' }}"
+  vars:
+    task_action: "{{ 'Enable' if zfs_datasets_decrypt_at_boot_enable else 'Disable' }}"
+  become: true
+  become_user: root
+

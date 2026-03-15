@@ -1,0 +1,39 @@
+- name: "Set dataset fact-vars for included tasks"
+  ansible.builtin.set_fact:
+    zfs_dataset_initial_props: {}
+    zfs_dataset_persist_props: {}
+    zfs_dataset_pool: "{{ dataset.pool }}"
+    zfs_dataset_name: "{{ dataset.pool }}{{ dataset.path }}"
+    zfs_dataset_path: "{{ dataset.path }}"
+    zfs_dataset_owner: "{{ dataset.owner }}"
+    zfs_dataset_group: "{{ dataset.group }}"
+    zfs_dataset_mode: "{{ dataset.mode }}"
+    zfs_dataset_enc_enable: "{{ dataset.enc | length > 0 }}"
+    zfs_dataset_enc_passwd: "{{ dataset.enc }}"
+
+- name: "Check filesystem-dataset prerequisites"
+  ansible.builtin.include_tasks: check.yml
+
+- name: "Add inital properties, for creation of new filesystem-dataset"
+  ansible.builtin.include_tasks: initial_props.yml
+  when: not zfs_dataset_exists
+
+- name: "Create a new zfs filesystem-dataset"
+  ansible.builtin.include_tasks: run_zfs_cmd.yml
+  vars:
+    dataset_action: "Create"
+    dataset_props: "{{ zfs_dataset_initial_props }}"
+  when: not zfs_dataset_exists
+
+- name: "Add persistent properties, for modification of existing filesystem-dataset"
+  ansible.builtin.include_tasks: persist_props.yml
+
+- name: "Set persistent properties on existing zfs filesystem-dataset"
+  ansible.builtin.include_tasks: run_zfs_cmd.yml
+  vars:
+    dataset_action: "Modify"
+    dataset_props: "{{ zfs_dataset_persist_props }}"
+
+- name: "Set owner and permissions of the filesystem-dataset"
+  ansible.builtin.include_tasks: set_perms.yml
+

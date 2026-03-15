@@ -1,0 +1,6 @@
+- name: "Configure single filesystem-dataset"
+  ansible.builtin.include_tasks: config_single.yml
+  loop: "{{ zfs_datasets_to_create }}"
+  loop_control:
+    loop_var: dataset
+

@@ -52,6 +52,7 @@ Create and configure zfs _filesystem-datasets_.
        - name: "Create and configure zfs filesystem datasets"
          ansible.builtin.include_role:
            name: ans_role_config_zfs_datasets
+           public: true
          vars:
            filesystem_datasets:
              - { pool: 'zroot', path: '/home',             mount: '/home',     owner: 'root',  group: 'wheel', mode: '755' }

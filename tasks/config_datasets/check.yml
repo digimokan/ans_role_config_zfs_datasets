@@ -1,0 +1,46 @@
+- name: "Check status of pool '{{ zfs_dataset_pool }}'"
+  ansible.builtin.command:
+    cmd: "zpool list {{ zfs_dataset_pool }}"
+  register: pool_exists_result
+  changed_when: false
+  failed_when: false
+
+- name: "Assert that pool '{{ zfs_dataset_pool }}' exists on the system"
+  ansible.builtin.assert:
+    that: "pool_exists_result.rc == 0"
+    fail_msg: "You must create or import pool '{{ zfs_dataset_pool }}' prior to creating datasets"
+    quiet: true
+
+- name: "Get mountpoint of pool '{{ zfs_dataset_pool }}'"
+  ansible.builtin.command:
+    cmd: "zfs get -H -o value -p mountpoint {{ zfs_dataset_pool }}"
+  register: pool_mountpoint_result
+  changed_when: false
+
+- name: "Assert that pool mountpoint '{{ mountpoint }}' is in base path of dataset path '{{ dataset_path }}'"
+  ansible.builtin.assert:
+    that: "dataset_path.startswith(mountpoint)"
+    fail_msg: "dataset should be on pool '{{ zfs_dataset_pool }}', which has mountpoint '{{ mountpoint }}"
+    quiet: true
+  vars:
+    mountpoint: "{{ pool_mountpoint_result.stdout }}"
+
+- name: "Check if filesystem-dataset '{{ zfs_dataset_name }}' exists"
+  ansible.builtin.command:
+    cmd: "zfs list {{ zfs_dataset_name }}"
+  register: zfs_dataset_exists_result
+  failed_when: zfs_dataset_exists_result.rc > 1
+
+- name: "Set zfs_dataset_exists fact to '{{ dataset_exists }}'"
+  ansible.builtin.set_fact:
+    zfs_dataset_exists: "{{ dataset_exists }}"
+  vars:
+    dataset_exists: "{{ zfs_dataset_exists_result.rc == 0 }}"
+
+- name: "Assert that encryption password is not specified for an existing dataset"
+  ansible.builtin.assert:
+    that: "{{ not zfs_dataset_enc_enable }}"
+    fail_msg: "filesystem-dataset '{{ zfs_dataset_name }}' exists, so 'enc' field cannot be specified"
+    quiet: true
+  when: zfs_dataset_exists
+

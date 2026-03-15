@@ -1,0 +1,7 @@
+- name: "Remove any existing encrypted-dataset-temp-password file"
+  ansible.builtin.file:
+    path: "{{ zfs_datasets_temp_enc_pswd_path }}"
+    state: absent
+  become: true
+  become_user: root
+

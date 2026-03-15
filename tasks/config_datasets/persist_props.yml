@@ -1,0 +1,10 @@
+- name: "Add persistent dataset properties"
+  ansible.builtin.set_fact:
+    zfs_dataset_persist_props: "{{ zfs_dataset_persist_props | combine({ prop.prop_nm: prop.prop_val }) }}"
+    loop:
+      - { prop_nm: "keyformat", prop_val: "passphrase", add: "{{ zfs_dataset_enc_enable }}" }
+      - { prop_nm: "keylocation", prop_val: "prompt", add: "{{ zfs_dataset_enc_enable }}" }
+    loop_control:
+      loop_var: prop
+    when: prop.add
+

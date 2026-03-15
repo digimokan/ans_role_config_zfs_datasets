@@ -1,0 +1,8 @@
+- name: "{{ dataset_action }} filesystem-dataset '{{ zfs_dataset_name }}'"
+  community.general.zfs:
+    name: "{{ zfs_dataset_name }}"
+    state: present
+    extra_zfs_properties: "{{ dataset_props }}"
+  become: true
+  become_user: root
+

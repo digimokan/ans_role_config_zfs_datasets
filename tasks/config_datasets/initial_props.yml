@@ -1,0 +1,20 @@
+- name: "Creating new encrypted dataset, so store temp password in file"
+  ansible.builtin.copy:
+    content: "{{ zfs_dataset_enc_passwd }}"
+    dest: "{{ zfs_datasets_temp_enc_pswd_path }}"
+    mode: 0400
+  become: true
+  become_user: root
+  when: zfs_dataset_enc_enable
+
+- name: "Add inital dataset properties"
+  ansible.builtin.set_fact:
+    zfs_dataset_initial_props: "{{ zfs_dataset_initial_props | combine({ prop.prop_nm: prop.prop_val }) }}"
+    loop:
+      - { prop_nm: "encryption", prop_val: "on", add: "{{ zfs_dataset_enc_enable }}" }
+      - { prop_nm: "keyformat", prop_val: "passphrase", add: "{{ zfs_dataset_enc_enable }}" }
+      - { prop_nm: "keylocation", prop_val: "file://{{ zfs_datasets_temp_enc_pswd_path }}", add: "{{ zfs_dataset_enc_enable }}" }
+    loop_control:
+      loop_var: prop
+    when: prop.add
+

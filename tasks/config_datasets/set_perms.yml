@@ -1,0 +1,10 @@
+- name: "Set owner and permissions on filesystem-dataset '{{ zfs_dataset_name }}'"
+  ansible.builtin.file:
+    path: "{{ zfs_dataset_path }}"
+    owner: "{{ zfs_dataset_owner }}"
+    group: "{{ zfs_dataset_group }}"
+    mode: "{{ zfs_dataset_mode }}"
+    state: directory
+  become: true
+  become_user: root
+
