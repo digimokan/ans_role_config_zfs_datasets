@@ -20,10 +20,10 @@
   community.general.sysrc:
     path: "{{ zfs_datasets_freebsd_rc_conf_filepath }}"
     name: "zfs_datasets_decrypt_at_boot_enable"
-    value: "{{ 'YES' if zfs_datasets_decrypt_at_boot_enable else 'NO' }}"
-    state: "{{ 'present' if zfs_datasets_decrypt_at_boot_enable else 'absent' }}"
+    value: "{{ 'YES' if zfs_datasets_decrypt_at_boot else 'NO' }}"
+    state: "{{ 'present' if zfs_datasets_decrypt_at_boot else 'absent' }}"
   vars:
-    task_action: "{{ 'Enable' if zfs_datasets_decrypt_at_boot_enable else 'Disable' }}"
+    task_action: "{{ 'Enable' if zfs_datasets_decrypt_at_boot else 'Disable' }}"
   become: true
   become_user: root
 
