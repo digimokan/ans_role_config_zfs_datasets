@@ -2,8 +2,12 @@
   ansible.builtin.set_fact:
     zfs_dataset_initial_props: {}
     zfs_dataset_persist_props: {}
-    zfs_dataset_pool: "{{ dataset.pool }}"
-    zfs_dataset_name: "{{ dataset.pool }}{{ dataset.stem }}"
+    zfs_dataset_pool: "{{ dataset.parent | split('/') | first }}"
+    zfs_dataset_parent: "{{ dataset.parent }}"
+    zfs_dataset_stem: "{{ dataset.stem }}"
+    zfs_dataset_name: "{{ dataset.parent }}/{{ dataset.stem }}"
+    zfs_dataset_mnt: "{{ dataset.mnt }}"
+    zfs_dataset_mnt_inh: "{{ dataset.mnt_inh }}"
     zfs_dataset_owner: "{{ dataset.owner }}"
     zfs_dataset_group: "{{ dataset.group }}"
     zfs_dataset_mode: "{{ dataset.mode }}"
@@ -11,8 +15,11 @@
     zfs_dataset_enc_passwd: "{{ dataset.enc }}"
     zfs_dataset_nfs_enable: "{{ dataset.nfs }}"
 
-- name: "Check filesystem-dataset prerequisites"
-  ansible.builtin.include_tasks: check.yml
+- name: "Check filesystem-dataset parent"
+  ansible.builtin.include_tasks: check_parent.yml
+
+- name: "Check filesystem-dataset properties"
+  ansible.builtin.include_tasks: check_props.yml
 
 - name: "Add inital properties, for creation of new filesystem-dataset"
   ansible.builtin.include_tasks: initial_props.yml

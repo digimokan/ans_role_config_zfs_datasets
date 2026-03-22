@@ -1,0 +1,26 @@
+- name: "Check status of pool '{{ zfs_dataset_pool }}'"
+  ansible.builtin.command:
+    cmd: "zpool list {{ zfs_dataset_pool }}"
+  register: pool_exists_result
+  changed_when: false
+  failed_when: pool_exists_result.rc > 1
+
+- name: "Assert that parent dataset's pool '{{ zfs_dataset_pool }}' exists on the system"
+  ansible.builtin.assert:
+    that: "pool_exists_result.rc == 0"
+    fail_msg: "You must create or import pool '{{ zfs_dataset_pool }}' prior to creating datasets"
+    quiet: true
+
+- name: "Check status of parent dataset '{{ zfs_dataset_parent }}'"
+  ansible.builtin.command:
+    cmd: "zfs list -H -o name {{ zfs_dataset_parent }}"
+  register: parent_exists_result
+  changed_when: false
+  failed_when: parent_exists_result.rc > 1
+
+- name: "Assert that parent dataset '{{ zfs_dataset_parent }}' exists on the system"
+  ansible.builtin.assert:
+    that: "parent_exists_result.rc == 0"
+    fail_msg: "parent dataset '{{ zfs_dataset_parent }}' does not exist - create it first?"
+    quiet: true
+

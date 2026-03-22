@@ -1,17 +1,27 @@
-# the zfs filesystem-datasets to create, along with the owner/group/permissions
-# --> pool: the zpool to create the dataset on
-# --> stem: partial sub-path, starting with "/", to append after pool name
-#           dataset will be mounted at [pool-mountpoint][stem]
-#           dataset will inherit properties of parent datasets in stem's path
+# the zfs filesystem-datasets to create, along with permissions and properties
+# --> parent: the parent dataset
+# --> stem: the "subdir" to append to the parent dataset
+# -->       NOTE the final name of the dataset will be "parent/stem"
+# --> mnt: path that the dataset will be mounted on
+# --> mnt_inh: inherit mountpoint from parent (preferred), or set as local prop
 # --> owner: user that owns the dataset
 # --> group: group that owns the dataset
 # --> mode: file mode of the dataset
 # --> enc: encryption passphrase for dataset (empty str for no encryption)
 # --> nfs: make the dataset available as an NFS share
 zfs_datasets_to_create: []
-# - { pool: "zroot", stem: "/home",             owner: "root",  group: "wheel", mode: "755", enc: "", nfs: false }
-# - { pool: "zroot", stem: "/home/user2",       owner: "user2", group: "user2", mode: "710", enc: "", nfs: false }
-# - { pool: "zroot", stem: "/home/user2/Trash", owner: "user2", group: "user2", mode: "755", enc: "", nfs: false }
+# - { parent: "zroot", stem: "home",  mnt: "/home", mnt_inh: true,
+#     owner: "root",  group: "wheel", mode: "755", enc: "", nfs: false }
+# - { parent: "zroot/home", stem: "user2", mnt: "/home/user2", mnt_inh: true,
+#     owner: "user2", group: "user2", mode: "710", enc: "", nfs: false }
+# - { parent: "zroot/home/user2", stem: "Trash", mnt: "/home/user2/Trash", mnt_inh: true,
+#     owner: "user2", group: "user2", mode: "755", enc: "", nfs: false }
+# - { parent: "zstore", stem: "Webdata", mnt: "none", mnt_inh: false,
+#     owner: "root", group: "root", mode: "755", enc: "", nfs: false }
+# - { parent: "zstore/Webdata", stem: "Nginx", mnt: "/var/www/html", mnt_inh: false,
+#     owner: "root", group: "root", mode: "755", enc: "", nfs: false }
+# - { parent: "zstore/Webdata", stem: "Mysql", mnt: "/var/lib/mysql", mnt_inh: false,
+#     owner: "root", group: "root", mode: "755", enc: "", nfs: false }
 
 # on boot, query user for any passphrases required to mount zfs datasets
 zfs_datasets_decrypt_at_boot: true

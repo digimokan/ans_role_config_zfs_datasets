@@ -1,0 +1,36 @@
+- name: "Check if filesystem-dataset '{{ zfs_dataset_name }}' exists"
+  ansible.builtin.command:
+    cmd: "zfs list -H -o name {{ zfs_dataset_name }}"
+  register: zfs_dataset_exists_result
+  changed_when: false
+  failed_when: zfs_dataset_exists_result.rc > 1
+
+- name: "Set zfs_dataset_exists fact to '{{ dataset_exists }}'"
+  ansible.builtin.set_fact:
+    zfs_dataset_exists: "{{ dataset_exists }}"
+  vars:
+    dataset_exists: "{{ zfs_dataset_exists_result.rc == 0 }}"
+
+- name: "Get mountpoint of '{{ zfs_dataset_parent }}'"
+  ansible.builtin.command:
+    cmd: "zfs get -H -o value -p mountpoint {{ zfs_dataset_parent }}"
+  register: parent_mountpoint_result
+  changed_when: false
+  when: zfs_dataset_mnt_inh
+
+- name: "Assert that dataset 'mnt' prop of '{{ zfs_dataset_mnt }}' includes parent dataset mountpoint"
+  ansible.builtin.assert:
+    that: "zfs_dataset_mnt == (parent_mountpoint ~ '/' ~ zfs_dataset_stem)"
+    fail_msg: "dataset 'mnt_inh' prop is set, so dataset 'mnt' prop should begin with parent mntpt '{{ parent_mountpoint }}'"
+    quiet: true
+  vars:
+    parent_mountpoint: "{{ parent_mountpoint_result.stdout }}"
+  when: zfs_dataset_mnt_inh
+
+- name: "Assert that encryption password is not specified for an existing dataset"
+  ansible.builtin.assert:
+    that: "{{ not zfs_dataset_enc_enable }}"
+    fail_msg: "filesystem-dataset '{{ zfs_dataset_name }}' exists, so 'enc' field cannot be specified"
+    quiet: true
+  when: zfs_dataset_exists
+
